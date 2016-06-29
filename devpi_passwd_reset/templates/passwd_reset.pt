@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+    <head>
+        <title>devpi - Not Found</title>
+        <metal:head use-macro="request.macros['head']" />
+    </head>
+    <body>
+        <metal:search use-macro="request.macros['navigation']" />
+        <div id="content">
+            <h1>Set new password for user ${username}</h1>
+            <p tal:condition="exists:error" class="error">Error: ${error}</p>
+            <p tal:condition="msg">${msg}</p>
+            <form tal:condition="not:msg" action="${request.route_url('passwd_reset', token=token)}" method="POST">
+                <label for="password">New password:</label>
+                <input name="password" type="password" value="" />
+                <br />
+                <label for="password2">Repeat new password:</label>
+                <input name="password2" type="password" value="" />
+                <br />
+                <input name="submit" type="submit" value="Set new password" />
+            </form>
+        </div>
+        <metal:footer use-macro="request.macros['footer']" />
+    </body>
+</html>

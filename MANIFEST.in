@@ -1,0 +1,4 @@
+include *.ini *.rst
+include LICENSE
+recursive-include devpi_passwd_reset/templates *.pt
+recursive-include tests *.py
