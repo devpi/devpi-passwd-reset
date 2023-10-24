@@ -1,4 +1,4 @@
-from base64 import b64decode, b64encode
+from base64 import b64encode
 from devpi_server.auth import newsalt
 from pyramid.view import view_config
 from pyramid_mailer.message import Message
@@ -124,7 +124,7 @@ def password_reset_view(context, request):
     except ValueError as e:
         result['error'] = py.builtin.text(e)
         return result
-    except itsdangerous.SignatureExpired as e:
+    except itsdangerous.SignatureExpired:
         result['error'] = "The password reset link has expired, request a new one."
         return result
     username = info['username']
