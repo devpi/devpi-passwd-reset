@@ -1,13 +1,18 @@
 from devpi_passwd_reset import hookspecs
 from devpi_server.log import threadlog
+from pluggy import HookimplMarker
 from pluggy import PluginManager
 import os
 import sys
 import yaml
 
 
+devpiserver_hookimpl = HookimplMarker("devpiserver")
+devpipasswdreset_hookimpl = HookimplMarker("devpipasswdreset")
+
+
 def get_pluginmanager(load_entry_points=True):
-    pm = PluginManager("devpipasswdreset", implprefix="devpipasswdreset_")
+    pm = PluginManager("devpipasswdreset")
     pm.add_hookspecs(hookspecs)
     if load_entry_points:
         pm.load_setuptools_entrypoints("devpi_passwd_reset")
@@ -20,6 +25,7 @@ def fatal(msg):
     sys.exit(1)
 
 
+@devpiserver_hookimpl
 def devpiserver_pyramid_configure(config, pyramid_config):
     from pyramid_mailer import mailer_factory_from_settings
     # by using include, the package name doesn't need to be set explicitly
@@ -36,6 +42,7 @@ def devpiserver_pyramid_configure(config, pyramid_config):
     pyramid_config.registry['mailer'] = mailer_factory_from_settings(settings)
 
 
+@devpiserver_hookimpl
 def devpiserver_add_parser_options(parser):
     group = parser.addgroup("Password reset")
     group.addoption(
@@ -43,6 +50,7 @@ def devpiserver_add_parser_options(parser):
         help="Password reset configuration file")
 
 
+@devpipasswdreset_hookimpl
 def devpipasswdreset_validate(password):
     if not password.strip():
         raise ValueError("The password can't be empty.")
