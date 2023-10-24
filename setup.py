@@ -34,7 +34,7 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python"] + [
             "Programming Language :: Python :: %s" % x
-            for x in "2 3 2.7 3.4 3.5".split()],
+            for x in "3 3.7 3.8 3.9 3.10 3.11".split()],
     entry_points={
         'devpi_server': [
             "devpi-passwd-reset = devpi_passwd_reset.main"],
@@ -42,8 +42,10 @@ setup(
             "devpi-passwd-reset = devpi_passwd_reset.main"]},
     install_requires=[
         'PyYAML',
+        'devpi-server>=6.0.0',
         'devpi-web',
         'pyramid_mailer'],
     include_package_data=True,
+    python_requires='>=3.7',
     zip_safe=False,
     packages=['devpi_passwd_reset'])
