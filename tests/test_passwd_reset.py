@@ -27,7 +27,7 @@ def test_reset(dummy_mailer, mapp, name, testapp):
     assert msg.text == 'A mail with a link to reset your password has been sent.'
     (msg,) = dummy_mailer.outbox
     assert msg.send_to == {"foo@example.com"}
-    html = bs4.BeautifulSoup(msg.html, "html5lib")
+    html = bs4.BeautifulSoup(msg.html, "html.parser")
     (link,) = html.select('a')
     assert link.attrs['href'] in msg.body
     r = testapp.xget(
@@ -53,7 +53,7 @@ def test_empty_password(dummy_mailer, mapp, testapp):
     mapp.create_user("foo", password="foo", email="foo@example.com")
     r = request_link(testapp, user_or_email='foo')
     (msg,) = dummy_mailer.outbox
-    html = bs4.BeautifulSoup(msg.html, "html5lib")
+    html = bs4.BeautifulSoup(msg.html, "html.parser")
     (link,) = html.select('a')
     r = testapp.post(
         link.attrs['href'],
@@ -71,7 +71,7 @@ def test_password_mismatch(dummy_mailer, mapp, testapp):
     mapp.create_user("foo", password="foo", email="foo@example.com")
     r = request_link(testapp, user_or_email='foo')
     (msg,) = dummy_mailer.outbox
-    html = bs4.BeautifulSoup(msg.html, "html5lib")
+    html = bs4.BeautifulSoup(msg.html, "html.parser")
     (link,) = html.select('a')
     r = testapp.post(
         link.attrs['href'],
@@ -106,7 +106,7 @@ def test_deleted_user(dummy_mailer, mapp, testapp):
     mapp.create_user("foo", password="foo", email="foo@example.com")
     r = request_link(testapp, user_or_email='foo')
     (msg,) = dummy_mailer.outbox
-    html = bs4.BeautifulSoup(msg.html, "html5lib")
+    html = bs4.BeautifulSoup(msg.html, "html.parser")
     (link,) = html.select('a')
     mapp.login_root()
     mapp.delete_user("foo")
@@ -121,7 +121,7 @@ def test_reuse(dummy_mailer, mapp, testapp):
     mapp.create_user("foo", password="foo", email="foo@example.com")
     r = request_link(testapp, user_or_email='foo')
     (msg,) = dummy_mailer.outbox
-    html = bs4.BeautifulSoup(msg.html, "html5lib")
+    html = bs4.BeautifulSoup(msg.html, "html.parser")
     (link,) = html.select('a')
     r = testapp.post(
         link.attrs['href'],
@@ -148,7 +148,7 @@ def test_timeout(dummy_mailer, mapp, monkeypatch, testapp):
     mapp.create_user("foo", password="foo", email="foo@example.com")
     r = request_link(testapp, user_or_email='foo')
     (msg,) = dummy_mailer.outbox
-    html = bs4.BeautifulSoup(msg.html, "html5lib")
+    html = bs4.BeautifulSoup(msg.html, "html.parser")
     (link,) = html.select('a')
 
     def loads(*args, **kw):
