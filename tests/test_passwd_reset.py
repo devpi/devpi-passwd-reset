@@ -2,6 +2,9 @@ import bs4
 import pytest
 
 
+pytestmark = [pytest.mark.notransaction]
+
+
 def test_importable():
     import devpi_passwd_reset
     assert devpi_passwd_reset.__version__
