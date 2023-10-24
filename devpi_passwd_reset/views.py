@@ -41,7 +41,8 @@ def get_pwhash(user):
 
 def generate_link(request, user):
     xom = request.registry['xom']
-    serializer = itsdangerous.URLSafeTimedSerializer(xom.config.secret)
+    secret = xom.config.get_derived_key(b'devpi-passwd-reset')
+    serializer = itsdangerous.URLSafeTimedSerializer(secret)
     result = {
         'hash_type': 'sha256',
         'salt': newsalt(),
@@ -53,7 +54,8 @@ def generate_link(request, user):
 
 def get_token_info(request, token):
     xom = request.registry['xom']
-    serializer = itsdangerous.URLSafeTimedSerializer(xom.config.secret)
+    secret = xom.config.get_derived_key(b'devpi-passwd-reset')
+    serializer = itsdangerous.URLSafeTimedSerializer(secret)
     value = serializer.loads(token, max_age=24 * 60 * 60)
     user = xom.model.get_user(value['username'])
     if user is None:
