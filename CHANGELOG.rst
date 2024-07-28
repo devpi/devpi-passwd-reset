@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2.0.1 - Unreleased
+------------------
+
+- Remove usage of unmaintained py library.
+
+
 2.0.0 - 2023-12-19
 ------------------
 

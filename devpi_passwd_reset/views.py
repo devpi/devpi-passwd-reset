@@ -4,7 +4,6 @@ from pyramid.view import view_config
 from pyramid_mailer.message import Message
 import hashlib
 import itsdangerous
-import py
 import textwrap
 
 
@@ -21,18 +20,12 @@ def find_user(xom, user_or_email):
     return user
 
 
-def to_bytes(data):
-    if py.builtin._istext(data):
-        return data.encode('ascii')
-    return data
-
-
 def generate_token(info, pwhash):
     token_hash = getattr(hashlib, info['hash_type'])()
-    token_hash.update(to_bytes(info['salt']))
-    token_hash.update(to_bytes(info['username']))
-    token_hash.update(to_bytes(pwhash))
-    return py.builtin._totext(b64encode(token_hash.digest()), encoding='ascii')
+    token_hash.update(info['salt'].encode())
+    token_hash.update(info['username'].encode())
+    token_hash.update(pwhash.encode())
+    return b64encode(token_hash.digest()).decode('ascii')
 
 
 def get_pwhash(user):
@@ -124,7 +117,7 @@ def password_reset_view(context, request):
     try:
         info = get_token_info(request, token)
     except ValueError as e:
-        result['error'] = py.builtin.text(e)
+        result['error'] = str(e)
         return result
     except itsdangerous.SignatureExpired:
         result['error'] = "The password reset link has expired, request a new one."
@@ -142,7 +135,7 @@ def password_reset_view(context, request):
     try:
         pm.hook.devpipasswdreset_validate(password=password)
     except ValueError as e:
-        result['error'] = py.builtin.text(e)
+        result['error'] = str(e)
         return result
     xom = request.registry['xom']
     user = xom.model.get_user(username)
