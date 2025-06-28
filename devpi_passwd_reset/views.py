@@ -1,9 +1,10 @@
 from base64 import b64encode
-from devpi_server.auth import newsalt
 from pyramid.view import view_config
 from pyramid_mailer.message import Message
+import base64
 import hashlib
 import itsdangerous
+import secrets
 import textwrap
 
 
@@ -38,7 +39,7 @@ def generate_link(request, user):
     serializer = itsdangerous.URLSafeTimedSerializer(secret)
     result = {
         'hash_type': 'sha256',
-        'salt': newsalt(),
+        'salt': base64.b64encode(secrets.token_bytes(16)).decode("ascii"),
         'username': user.name}
     result['token'] = generate_token(result, get_pwhash(user))
     value = serializer.dumps(result)

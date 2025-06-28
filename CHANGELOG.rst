@@ -4,6 +4,8 @@ Changelog
 2.0.1 - Unreleased
 ------------------
 
+- Fix compatibility with devpi-server 6.17.0.
+
 - Remove usage of unmaintained py library.
 
 
