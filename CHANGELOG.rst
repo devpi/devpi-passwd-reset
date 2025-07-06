@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.0.1 - Unreleased
+2.0.1 - 2025-07-06
 ------------------
 
 - Fix compatibility with devpi-server 6.17.0.
